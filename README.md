@@ -1,61 +1,44 @@
 # Terraform Module Template
 
 
-> **Warning**:
-> This is a template document. Remember to **remove** all text in _italics_ and **update** Module name, Repo name and links/badges to the actual name of your GitHub repository/module!!!
-
-<!--- Pick Cloud provider Badge -->
-<!---![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white) -->
-<!---![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white) -->
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
-<!---![Snowflake](https://img.shields.io/badge/-SNOWFLAKE-249edc?style=for-the-badge&logo=snowflake&logoColor=white) -->
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
 
 <!--- Replace repository name -->
-![License](https://badgen.net/github/license/getindata/terraform-module-template/)
-![Release](https://badgen.net/github/release/getindata/terraform-module-template/)
-
-<p align="center">
-  <img height="150" src="https://getindata.com/img/logo.svg">
-  <h3 align="center">We help companies turn their data into assets</h3>
-</p>
+![License](https://badgen.net/github/license/sterliakov/terraform-aws-ecr-image/)
+![Release](https://badgen.net/github/release/sterliakov/terraform-aws-ecr-image/)
 
 ---
 
-_Brief Description of MODULE:_
-
-* _What it does_
-* _What technologies it uses_
-
-> **Warning**:
-> _When using "Invicton-Labs/deepmerge/null" module - pin `tflint` version to `v0.41.0` in [pre-commit.yaml](.github/workflows/pre-commit.yml) to avoid failing `tflint` checks_
 
 ## USAGE
 
-_Example usage of the module - terraform code snippet_
+Push a dummy Alpine image to a newly created ECR repository:
 
 ```terraform
-module "template" {
-  source = "getindata/template/null"
-  # version  = "x.x.x"
+resource "aws_ecr_repository" "example" {
+  name = "example"
+}
 
-  example_var = "foo"
+module "ecr_repo_image" {
+  source = "./ecr_curl"
+
+  push_ecr_is_public = false
+  push_repo_fqdn     = replace(aws_ecr_repository.example.repository_url, "//.*$/", "") # remove everything after first slash
+  push_repo_name     = aws_ecr_repository.example.name
+  push_image_tag     = "deployed"
 }
 ```
 
 ## NOTES
 
-_Additional information that should be made public, for ex. how to solve known issues, additional descriptions/suggestions_
+* This module needs `curl` and `jq` on `PATH`.
 
 ## EXAMPLES
 
-- [Simple](examples/simple) - Basic usage of the module
-- [Complete](examples/complete) - Advanced usage of the module
+- [Lambda](examples/lambda) - Deploy a dummy image for Lambda (5 MB alpine by default)
 
 <!-- BEGIN_TF_DOCS -->
-
-
-
 
 ## Inputs
 
@@ -126,12 +109,3 @@ Start by reviewing [contribution guide](CONTRIBUTING.md) and our [code of conduc
 ## LICENSE
 
 Apache 2 Licensed. See [LICENSE](LICENSE) for full details.
-
-## AUTHORS
-
-<!--- Replace repository name -->
-<a href="https://github.com/getindata/REPO_NAME/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=getindata/terraform-module-template" />
-</a>
-
-Made with [contrib.rocks](https://contrib.rocks).
