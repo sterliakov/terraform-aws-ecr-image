@@ -17,12 +17,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - uses: actions/cache@v4
-        name: Cache plugin dir
-        with:
-          path: ~/.tflint.d/plugins
-          key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
-
       - uses: actions/setup-python@v3
       - uses: hashicorp/setup-terraform@v3
       - uses: terraform-linters/setup-tflint@v4
