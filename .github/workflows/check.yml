@@ -19,10 +19,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         -   uses: actions/checkout@v4
-            with:
-                ref: ${{ github.event.pull_request.head.ref }}
 
         -   uses: actions/setup-python@v5
+            with:
+                python-version: '3.12'
         -   uses: hashicorp/setup-terraform@v3
         -   uses: terraform-linters/setup-tflint@v4
             name: Setup TFLint
@@ -45,7 +45,6 @@ jobs:
         -   uses: pre-commit/action@v3.0.1
             with:
                 extra_args: --all-files --show-diff-on-failure
-
 
     test:
         name: Test
