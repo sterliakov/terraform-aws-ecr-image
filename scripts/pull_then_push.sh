@@ -17,6 +17,14 @@ set -eu
 #     PUSH_REPO_NAME='my-repo' \
 #     PUSH_IMAGE_TAG='latest' \
 #     ./pull_then_push.sh
+#
+# Exit codes:
+# * 1 - Undefined input variable
+# * 2 - Missing tools
+# * 3 - Pull failures
+# * 4, 5 - Push failures
+# * Other codes - curl failures or unexpected error
+#
 ##
 
 _dir_path() {
@@ -38,6 +46,25 @@ check_vars PUSH_REPO_FQDN PUSH_REPO_NAME PUSH_IMAGE_TAG
 if [ -z ${PUSH_CURL_AUTH_HEADER+x} ]; then
   echo >&2 "\$PUSH_CURL_AUTH_HEADER is undefined. If no auth header required then set PULL_CURL_AUTH_HEADER=''"
   exit 1
+fi
+
+# Check tools
+if ! command -v curl &>/dev/null; then
+  echo "curl not found" >&2
+  exit 2
+fi
+if ! command -v jq &>/dev/null; then
+  echo "jq not found, trying to install..." >&2
+  bin_dir="$PULL_DOWNLOAD_DIR_PATH/bin"
+  mkdir -p "$bin_dir"
+  bin_dir=$(readlink -f "$bin_dir")
+  if install_jq "$bin_dir"; then
+    export PATH="$bin_dir:$PATH"
+    echo "Installed $(jq --version)." >&2
+  else
+    echo "jq not found and could not be installed" >&2
+    exit 2
+  fi
 fi
 
 # Pull image

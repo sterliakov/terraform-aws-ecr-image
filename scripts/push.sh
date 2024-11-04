@@ -24,13 +24,13 @@ check_vars REPO_URL IMAGE_TAG LAYER_PATHS CONFIG_PATH MANIFEST_PATH
 echo "$LAYER_PATHS" | while read -r layer_path ; do
   if [[ ! -f "$layer_path" ]]; then
     echo "No file exists at layer_path of '$layer_path'" >&2
-    exit 1
+    exit 4
   fi
 done
 
 if [[ ! -f "$CONFIG_PATH" ]]; then
   echo "No file exists at CONFIG_PATH='$CONFIG_PATH'" >&2
-  exit 1
+  exit 4
 fi
 
 
@@ -65,7 +65,7 @@ _initiate_upload() {
   )
   if [[ -z "$location" ]]; then
     echo '_initiate_upload: Failed to parse Location from curl_output' >&2
-    return 1
+    return 5
   fi
 
   echo '_initiate_upload: complete' >&2
@@ -95,7 +95,7 @@ _patch_layer() {
   )
   if [[ -z "$location" ]]; then
     echo '_patch_layer: Failed to parse location from curl_output' >&2
-    return 1
+    return 5
   fi
 
   echo '_patch_layer: complete' >&2

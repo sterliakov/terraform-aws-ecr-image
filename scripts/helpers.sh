@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -eu
 
 curl_with_auth_header() {
   auth_params=()
@@ -42,4 +43,14 @@ check_vars() {
     exit 1
   fi
   return 0
+}
+
+install_jq() {
+  cd "${1:?Install directory not passed as $1 to install_jq}"
+  arch=$(uname -m)
+  case $arch in
+    x86_64) arch="amd64" ;;
+  esac
+  curl -fsSLo jq "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-$arch"
+  chmod 0755 jq
 }

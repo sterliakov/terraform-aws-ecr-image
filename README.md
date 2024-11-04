@@ -44,7 +44,9 @@ module "ecr_repo_image" {
 
 ## NOTES
 
-* This module needs `curl` and `jq` on `PATH`.
+* This module only works under Linux.
+* This module needs `curl` and `jq` on `PATH`. If `jq` are missing, it will fetch
+  and install `jq 1.7.1` locally for the appropriate architecture.
 
 ## EXAMPLES
 

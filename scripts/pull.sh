@@ -37,14 +37,14 @@ _fetch_manifest() {
     if [ "$image_hash" = "null" ]; then
       available=$(jq -r '. | map(.platform.architecture) | join(", ")' <<<"$manifests")
       printf "Architecture %s not found. Available options are: %s\n" "$IMAGE_ARCH" "$available" >&2
-      exit 2
+      exit 3
     else
       IMAGE_TAG="$image_hash" _fetch_manifest
     fi
   else
     echo "Unknown manifest format: " >&2
     echo "$curl_output" >&2
-    exit 1
+    exit 3
   fi
   echo '_fetch_manifest: complete' >&2
 }
@@ -72,7 +72,7 @@ download_image() {
   if [[ -z "$config_digest" || "$config_digest" == 'null' ]]; then
     echo 'download_image: failed to parse config_digest from manifest' >&2
     cat "$manifest_file_path" >&2
-    return 1
+    return 3
   fi
 
   config_file_path="$dir_path/config.json"
