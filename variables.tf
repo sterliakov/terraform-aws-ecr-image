@@ -31,6 +31,7 @@ variable "pull_image_arch" {
 variable "push_ecr_is_public" {
   description = "If the ECR repo we're pushing to is public (vs. private)"
   type        = bool
+  default     = false
 }
 
 variable "push_repo_fqdn" {

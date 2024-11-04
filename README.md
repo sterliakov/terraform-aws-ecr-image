@@ -52,7 +52,7 @@ module "ecr_repo_image" {
 | <a name="input_pull_image_tag"></a> [pull\_image\_tag](#input\_pull\_image\_tag) | The tag of the image we're pulling, e.g. latest | `string` | `"3.20.3"` | no |
 | <a name="input_pull_repo_fqdn"></a> [pull\_repo\_fqdn](#input\_pull\_repo\_fqdn) | The FQDN of the ECR repo we're pulling from, e.g. public.ecr.aws | `string` | `"public.ecr.aws"` | no |
 | <a name="input_pull_repo_name"></a> [pull\_repo\_name](#input\_pull\_repo\_name) | The name of the ECR repo we're pulling from, e.g. my-repo | `string` | `"docker/library/alpine"` | no |
-| <a name="input_push_ecr_is_public"></a> [push\_ecr\_is\_public](#input\_push\_ecr\_is\_public) | If the ECR repo we're pushing to is public (vs. private) | `bool` | n/a | yes |
+| <a name="input_push_ecr_is_public"></a> [push\_ecr\_is\_public](#input\_push\_ecr\_is\_public) | If the ECR repo we're pushing to is public (vs. private) | `bool` | `false` | no |
 | <a name="input_push_image_tag"></a> [push\_image\_tag](#input\_push\_image\_tag) | The tag of the image we're pushing, e.g. latest | `string` | n/a | yes |
 | <a name="input_push_repo_fqdn"></a> [push\_repo\_fqdn](#input\_push\_repo\_fqdn) | The FQDN of the ECR repo we're pushing to, e.g. 012345678910.dkr.ecr.<region-name>.amazonaws.com | `string` | n/a | yes |
 | <a name="input_push_repo_name"></a> [push\_repo\_name](#input\_push\_repo\_name) | The name of the ECR repo we're pushing to, e.g. my-repo | `string` | n/a | yes |
