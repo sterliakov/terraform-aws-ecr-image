@@ -56,7 +56,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                terraform_version: [1.4.6, latest]
+                terraform_version: [1.6.0, latest]
         steps:
         -   uses: actions/checkout@v4
         -   uses: hashicorp/setup-terraform@v3
