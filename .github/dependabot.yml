@@ -4,7 +4,7 @@ updates:
 -   package-ecosystem: github-actions
     directory: /    # For GitHub Actions "/" must be used for workflow files in ".github/workflows"
     schedule:
-        interval: weekly
+        interval: monthly
     commit-message:
         prefix: 'chore: '
     labels:
@@ -14,16 +14,16 @@ updates:
 -   package-ecosystem: terraform
     directory: /
     schedule:
-        interval: weekly
+        interval: monthly
     commit-message:
         prefix: 'chore: '
     labels:
     -   release/patch
 
 -   package-ecosystem: terraform
-    directory: /examples/simple/
+    directory: /examples/lambda/
     schedule:
-        interval: weekly
+        interval: monthly
     commit-message:
         prefix: 'chore: '
     labels:

@@ -20,7 +20,8 @@ data "aws_iam_policy_document" "github_actions_test" {
     resources = ["arn:aws:ecr:*:*:repository/ecr-test-*"]
   }
   statement {
-    actions   = ["ecr:GetAuthorizationToken"]
+    #checkov:skip=CKV_AWS_107:Token is needed for deployment
+    actions   = ["ecr:GetAuthorizationToken", "ecr-public:GetAuthorizationToken"]
     resources = ["*"]
   }
 }

@@ -7,6 +7,8 @@ on:
     pull_request:
         branches:
         -   main
+    schedule:
+    -   cron: 0 12 * * 1
 
 env:
     TEST_ROLE: arn:aws:iam::533267002298:role/ecr-test-role
