@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-curlWithAuthHeader() {
+curl_with_auth_header() {
   auth_params=()
   if [ -n "$CURL_AUTH_HEADER" ]; then
     auth_params+=('-H' "Authorization: $CURL_AUTH_HEADER")
@@ -8,20 +8,15 @@ curlWithAuthHeader() {
   curl "${auth_params[@]}" -L "$@"
 }
 
-curlStatus() {
-  curl_output="$1"
-  if [ -z "$curl_output" ]; then
-    # shellcheck disable=SC2016
-    echo 'curlStatus: no $1 for curl_output' >&2
-    return 1
-  fi
+_curl_status() {
+  curl_output="${1:?No curl output passed to _curl_status}"
   echo "$curl_output" | grep '^< HTTP/[0-9\.]* ' | tail -n 1 | awk '{print $3}'
 }
 
-assertCurlStatus() {
+assert_curl_status() {
   expected_code="$1"
   curl_output="$2"
-  status_code=$(curlStatus "$curl_output")
+  status_code=$(_curl_status "$curl_output")
   if [[ "$status_code" != "$expected_code" ]]; then
     echo "curl returned http status code of '$status_code' instead of '$expected_code'" >&2
     echo "$curl_output" >&2
@@ -29,9 +24,10 @@ assertCurlStatus() {
   fi
 }
 
-repoUrl() {
-  check_vars REPO_FQDN REPO_NAME
-  echo "https://$REPO_FQDN/v2/$REPO_NAME"
+repo_url() {
+  fqdn=${1:?No FQDN given at $1}
+  name=${2:?No name given at $2}
+  echo "https://$fqdn/v2/$name"
 }
 
 check_vars() {

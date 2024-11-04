@@ -1,6 +1,12 @@
 terraform {
   required_version = ">= 1.8.2"
 
+  backend "s3" {
+    bucket = "sterliakov"
+    key    = "terraform-aws-ecr-image/infra/terraform/terraform.tfstate"
+    region = "us-east-2"
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

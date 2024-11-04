@@ -1,4 +1,4 @@
-# Terraform Module Template
+# Temporary ECR image
 
 
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
@@ -9,6 +9,18 @@
 ![Release](https://badgen.net/github/release/sterliakov/terraform-aws-ecr-image/)
 
 ---
+
+## PURPOSE
+
+When AWS Lambda is deployed with container `image` source, that image must already
+exist. This makes deployment of such a function with terraform complicated: first
+`terraform apply` should create a ECR repository, then some other CI pipeline
+should build and push an image, and only then a lambda can be created.
+
+This module streamlines this process by pushing some tiny image as a placeholder.
+
+Idea was borrowed from [this StackOverflow answer](https://stackoverflow.com/a/78501527/14401160),
+but the implementation was significantly rewritten.
 
 
 ## USAGE

@@ -19,37 +19,31 @@ set -eu
 #     ./pull_then_push.sh
 ##
 
-dir_path() {
+_dir_path() {
   # https://stackoverflow.com/a/43919044
   a="/$0"; a="${a%/*}"; a="${a:-.}"; a="${a##/}/"; BINDIR=$(cd "$a"; pwd)
   echo "$BINDIR"
 }
-
-SCRIPT_NAME="${0##*/}"  # https://stackoverflow.com/a/192699
-DIR_PATH=$(dir_path)
+DIR_PATH=$(_dir_path)
 
 . "$DIR_PATH/helpers.sh"
 
-
-# Assert inputs
+check_vars PULL_REPO_FQDN PULL_REPO_NAME PULL_IMAGE_TAG PULL_IMAGE_ARCH
 if [ -z ${PULL_CURL_AUTH_HEADER+x} ]; then
   echo >&2 "\$PULL_CURL_AUTH_HEADER is undefined. If no auth header required then set PULL_CURL_AUTH_HEADER=''"
   exit 1
 fi
-
-check_vars PULL_REPO_FQDN PULL_REPO_NAME PULL_IMAGE_TAG PULL_IMAGE_ARCH PULL_DOWNLOAD_DIR_PATH
+check_vars PULL_DOWNLOAD_DIR_PATH
 check_vars PUSH_REPO_FQDN PUSH_REPO_NAME PUSH_IMAGE_TAG
-
-if [ -z ${PUSH_CURL_AUTH_HEADER+z} ]; then
-  echo "$SCRIPT_NAME: \$PUSH_CURL_AUTH_HEADER is undefined. If no auth header required then set PUSH_CURL_AUTH_HEADER=''" >&2
+if [ -z ${PUSH_CURL_AUTH_HEADER+x} ]; then
+  echo >&2 "\$PUSH_CURL_AUTH_HEADER is undefined. If no auth header required then set PULL_CURL_AUTH_HEADER=''"
   exit 1
 fi
 
 # Pull image
 export CURL_AUTH_HEADER="$PULL_CURL_AUTH_HEADER"
 manifest_path=$(
-  REPO_FQDN="$PULL_REPO_FQDN" \
-  REPO_NAME="$PULL_REPO_NAME" \
+  REPO_URL=$(repo_url "$PULL_REPO_FQDN" "$PULL_REPO_NAME") \
   IMAGE_TAG="$PULL_IMAGE_TAG" \
   IMAGE_ARCH="$PULL_IMAGE_ARCH" \
   DOWNLOAD_DIR_PATH="$PULL_DOWNLOAD_DIR_PATH" \
@@ -58,8 +52,7 @@ manifest_path=$(
 
 # Push image
 export CURL_AUTH_HEADER="$PUSH_CURL_AUTH_HEADER"
-REPO_FQDN="$PUSH_REPO_FQDN" \
-REPO_NAME="$PUSH_REPO_NAME" \
+REPO_URL=$(repo_url "$PUSH_REPO_FQDN" "$PUSH_REPO_NAME") \
 IMAGE_TAG="$PUSH_IMAGE_TAG" \
 LAYER_PATHS=$(find "$PULL_DOWNLOAD_DIR_PATH/layers" -type f) \
 CONFIG_PATH="$PULL_DOWNLOAD_DIR_PATH/config.json" \
