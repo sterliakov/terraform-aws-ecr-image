@@ -1,36 +1,49 @@
-# Example resource that outputs the input value and 
-# echoes it's base64 encoded version locally 
+data "aws_ecrpublic_authorization_token" "token" {}
+data "aws_ecr_authorization_token" "token" {}
 
-resource "null_resource" "output_input" {
-  count = local.enabled ? 1 : 0
+locals {
+  pull_then_push_path = "${path.module}/scripts/pull_then_push.sh"
+  download_prefix     = uuid()
+  download_dir_path   = "${path.root}/.terraform/tmp/${local.download_prefix}-image"
 
-  triggers = {
-    name  = local.name_from_descriptor
-    input = var.example_var
-  }
-
-  provisioner "local-exec" {
-    command = "echo ${var.example_var} | base64"
-  }
+  pull_token = (
+    var.pull_ecr_is_public
+    ? "Bearer ${data.aws_ecrpublic_authorization_token.token.authorization_token}"
+    : "Basic ${data.aws_ecr_authorization_token.token.authorization_token}"
+  )
+  push_token = (
+    var.push_ecr_is_public
+    ? "Bearer ${data.aws_ecrpublic_authorization_token.token.authorization_token}"
+    : "Basic ${data.aws_ecr_authorization_token.token.authorization_token}"
+  )
 }
 
-module "subresource_label" {
-  source  = "cloudposse/label/null"
-  version = "0.25.0"
-  context = module.this.context
+resource "terraform_data" "ecr_repo_image" {
+  triggers_replace = [
+    var.pull_image_tag,
+    var.pull_image_arch,
+    var.pull_repo_name,
+    var.pull_repo_fqdn,
 
-  attributes = ["sub"]
-}
-
-resource "null_resource" "subresource" {
-  count = local.enabled ? 1 : 0
-
-  triggers = {
-    name  = local.subresource_name_from_descriptor
-    input = var.sub_resource.example_var
-  }
+    var.push_image_tag,
+    var.push_repo_name,
+    var.push_repo_fqdn,
+  ]
 
   provisioner "local-exec" {
-    command = "echo ${var.sub_resource.example_var} | base64"
+    command     = local.pull_then_push_path
+    interpreter = ["bash", "-c"]
+    environment = {
+      PULL_CURL_AUTH_HEADER  = local.pull_token
+      PULL_REPO_FQDN         = var.pull_repo_fqdn
+      PULL_REPO_NAME         = var.pull_repo_name
+      PULL_IMAGE_TAG         = var.pull_image_tag
+      PULL_IMAGE_ARCH        = var.pull_image_arch
+      PULL_DOWNLOAD_DIR_PATH = local.download_dir_path
+      PUSH_CURL_AUTH_HEADER  = local.push_token
+      PUSH_REPO_FQDN         = var.push_repo_fqdn
+      PUSH_REPO_NAME         = var.push_repo_name
+      PUSH_IMAGE_TAG         = var.push_image_tag
+    }
   }
 }

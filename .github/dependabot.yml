@@ -1,40 +1,30 @@
 version: 2
 updates:
-
   # GitHub actions
-  - package-ecosystem: "github-actions"
-    directory: "/"  # For GitHub Actions "/" must be used for workflow files in ".github/workflows"
+-   package-ecosystem: github-actions
+    directory: /    # For GitHub Actions "/" must be used for workflow files in ".github/workflows"
     schedule:
-      interval: "weekly"
+        interval: monthly
     commit-message:
-      prefix: "chore: "
+        prefix: 'chore: '
     labels:
-      - "release/patch"
+    -   release/patch
 
   # Terraform
-  - package-ecosystem: "terraform"
-    directory: "/"
+-   package-ecosystem: terraform
+    directory: /
     schedule:
-      interval: "weekly"
+        interval: monthly
     commit-message:
-      prefix: "chore: "
+        prefix: 'chore: '
     labels:
-      - "release/patch"
+    -   release/patch
 
-  - package-ecosystem: "terraform"
-    directory: "/examples/complete/"
+-   package-ecosystem: terraform
+    directory: /examples/lambda/
     schedule:
-      interval: "weekly"
+        interval: monthly
     commit-message:
-      prefix: "chore: "
+        prefix: 'chore: '
     labels:
-      - "release/patch"
-
-  - package-ecosystem: "terraform"
-    directory: "/examples/simple/"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "chore: "
-    labels:
-      - "release/patch"
+    -   release/patch

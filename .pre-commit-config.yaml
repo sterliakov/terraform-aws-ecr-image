@@ -1,32 +1,54 @@
 repos:
-  - repo: https://github.com/gruntwork-io/pre-commit
-    rev: "v0.1.23" # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
     hooks:
-      - id: terraform-validate # It should be the first step as it runs terraform init required by tflint
-      - id: terraform-fmt
-      - id: tflint
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-merge-conflict
+    -   id: check-executables-have-shebangs
+    -   id: check-shebang-scripts-are-executable
+    -   id: check-symlinks
+    -   id: mixed-line-ending
+        args: [--fix=lf]
+    -   id: check-yaml
+    -   id: check-json
+    -   id: pretty-format-json
+        args: [--autofix, --no-ensure-ascii]
+
+-   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.14.0
+    hooks:
+    -   id: pretty-format-yaml
+        args: [--autofix, --indent, '4']
+
+-   repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+    -   id: shellcheck
+        args: [-x, -P, SCRIPTDIR, -S, style]
+
+-   repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.96.1
+    hooks:
+    -   id: terraform_validate
+    -   id: terraform_fmt
+    -   id: terraform_tflint
+    -   id: terraform_docs
         args:
-          - "--config=__GIT_ROOT__/.tflint.hcl"
+        -   --hook-config=--config-file=.terraform-docs.yml
 
-  - repo: https://github.com/terraform-docs/terraform-docs
-    rev: "v0.18.0" # Get the latest from: https://github.com/terraform-docs/terraform-docs/releases
+-   repo: https://github.com/bridgecrewio/checkov.git
+    rev: 3.2.277
     hooks:
-      - id: terraform-docs-go
-        args: ["."]
-
-  - repo: https://github.com/bridgecrewio/checkov.git
-    rev: "3.2.216" # Get the latest from: https://github.com/bridgecrewio/checkov/releases
-    hooks:
-      - id: checkov
-        args: [--skip-check, "CKV_TF_1"] # Terraform module sources do not use a git url with a commit hash revision
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.6.0" # Get the latest from: https://github.com/pre-commit/pre-commit-hooks/releases
-    hooks:
-      - id: check-merge-conflict
-        args: ["--assume-in-merge"]
-      - id: mixed-line-ending
-        args: ["--fix=no"]
-      - id: end-of-file-fixer
-      - id: check-case-conflict
-      - id: check-yaml
+    -   id: checkov
+        args:
+        -   --download-external-modules
+        -   'true'
+        -   --compact
+        -   --skip-check
+          # Terraform module sources do not use a git url with a commit hash revision
+        -   CKV_TF_1
+        -   --skip-path
+        -   examples/
+        -   --skip-path
+        -   tests/

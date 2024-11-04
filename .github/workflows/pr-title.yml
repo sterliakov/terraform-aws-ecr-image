@@ -1,16 +1,23 @@
 name: Validate PR title
 
 permissions:
-  pull-requests: read
-  statuses: write
+    pull-requests: read
 
 on:
-  pull_request_target:
-    types:
-      - opened
-      - edited
-      - synchronize
+    pull_request_target:
+        branches:
+        -   main
+        types:
+        -   opened
+        -   edited
+        -   synchronize
+        -   reopened
 
 jobs:
-  main:
-    uses: getindata/github-workflows/.github/workflows/gh-validate-pr-title.yml@v1
+    main:
+        name: Validate PR title
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: amannn/action-semantic-pull-request@v5
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

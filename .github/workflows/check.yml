@@ -1,0 +1,72 @@
+name: Lint and Test
+
+permissions:
+    contents: read
+
+on:
+    pull_request:
+        branches:
+        -   main
+    schedule:
+    -   cron: 0 12 * * 1
+
+env:
+    TEST_ROLE: arn:aws:iam::533267002298:role/ecr-test-role
+
+jobs:
+    pre-commit:
+        name: Pre-commit hooks
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v4
+
+        -   uses: actions/setup-python@v5
+            with:
+                python-version: '3.12'
+        -   uses: hashicorp/setup-terraform@v3
+        -   uses: terraform-linters/setup-tflint@v4
+            name: Setup TFLint
+            with:
+                tflint_version: latest
+        -   name: Install terraform-docs
+            run: |
+                cd "$(mktemp -d)"
+                curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.19.0/terraform-docs-v0.19.0-$(uname)-amd64.tar.gz
+                tar -xzf terraform-docs.tar.gz
+                chmod +x terraform-docs
+                echo "$PWD" >> $GITHUB_PATH
+
+        -   name: Init TFLint
+            run: tflint --init
+            env:
+                # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+                GITHUB_TOKEN: ${{ github.token }}
+
+        -   uses: pre-commit/action@v3.0.1
+            with:
+                extra_args: --all-files --show-diff-on-failure
+
+    test:
+        name: Test
+        needs: pre-commit
+        runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            contents: read
+        strategy:
+            fail-fast: false
+            matrix:
+                terraform_version: [1.7.0, latest]
+        steps:
+        -   uses: actions/checkout@v4
+        -   uses: hashicorp/setup-terraform@v3
+            with:
+                terraform_version: ${{ matrix.terraform_version }}
+        -   uses: aws-actions/configure-aws-credentials@v4
+            with:
+                role-to-assume: ${{ env.TEST_ROLE }}
+                aws-region: us-east-1
+        -   name: test
+            run: |
+                terraform init
+                terraform test
