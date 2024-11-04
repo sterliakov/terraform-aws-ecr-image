@@ -24,4 +24,8 @@ data "aws_iam_policy_document" "github_actions_test" {
     actions   = ["ecr:GetAuthorizationToken", "ecr-public:GetAuthorizationToken"]
     resources = ["*"]
   }
+  statement {
+    actions   = ["sts:GetServiceBearerToken"]
+    resources = ["*"]
+  }
 }
