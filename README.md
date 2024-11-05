@@ -19,7 +19,8 @@ should build and push an image, and only then a lambda can be created.
 
 This module streamlines this process by pushing some tiny image as a placeholder.
 
-Idea was borrowed from [this StackOverflow answer](https://stackoverflow.com/a/78501527/14401160),
+Idea and the initial code was borrowed from
+[this StackOverflow answer](https://stackoverflow.com/a/78501527/14401160),
 but the implementation was significantly rewritten.
 
 
@@ -33,7 +34,8 @@ resource "aws_ecr_repository" "example" {
 }
 
 module "ecr_repo_image" {
-  source = "./ecr_curl"
+  source  = "sterliakov/ecr-image/aws"
+  version = "0.1.0"
 
   push_ecr_is_public = false
   push_repo_fqdn     = replace(aws_ecr_repository.example.repository_url, "//.*$/", "") # remove everything after first slash
@@ -45,6 +47,9 @@ module "ecr_repo_image" {
 ## NOTES
 
 * This module only works under Linux.
+* Destroying this module does not remove the pushed image from the repository. Consider
+  setting `force_delete = True` on the `aws_ecr_repository` resource if you
+  want to remove the repository with terraform later.
 * This module needs `curl` and `jq` on `PATH`. If `jq` are missing, it will fetch
   and install `jq 1.7.1` locally for the appropriate architecture.
 
