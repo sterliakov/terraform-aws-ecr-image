@@ -4,7 +4,8 @@ resource "aws_ecr_repository" "example" {
 }
 
 module "ecr_repo_image" {
-  source = "../.."
+  source  = "sterliakov/ecr-image/aws"
+  version = "0.1.0"
 
   push_ecr_is_public = false
   push_repo_fqdn     = replace(aws_ecr_repository.example.repository_url, "//.*$/", "") # remove everything after first slash
