@@ -1,5 +1,9 @@
-data "aws_ecrpublic_authorization_token" "token" {}
-data "aws_ecr_authorization_token" "token" {}
+data "aws_ecrpublic_authorization_token" "token" {
+  provider = aws.virginia
+}
+data "aws_ecr_authorization_token" "token" {
+  provider = aws.main
+}
 
 locals {
   pull_then_push_path = "${path.module}/scripts/pull_then_push.sh"

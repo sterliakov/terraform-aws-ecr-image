@@ -29,13 +29,25 @@ but the implementation was significantly rewritten.
 Push a dummy Alpine image to a newly created ECR repository:
 
 ```terraform
+provider "aws" {
+  region = "us-east-2"
+}
+provider "aws" {
+  region = "us-east-1"
+  alias = "aws.virginia"
+}
+
 resource "aws_ecr_repository" "example" {
   name = "example"
 }
 
 module "ecr_repo_image" {
   source  = "sterliakov/ecr-image/aws"
-  version = "0.1.0"
+  version = "0.2.0"
+  providers = {
+    aws.main = aws
+    aws.virginia = aws.virginia
+  }
 
   push_ecr_is_public = false
   push_repo_fqdn     = replace(aws_ecr_repository.example.repository_url, "//.*$/", "") # remove everything after first slash
@@ -46,6 +58,9 @@ module "ecr_repo_image" {
 
 ## NOTES
 
+* This module needs two provider aliases: `aws.main` and `aws.virginia`. They
+  may refer to the same provider. `aws.virginia` must be in `us-east-1` region.
+  `aws.main` should be the provider for region where your repository is located.
 * This module only works under Linux.
 * Destroying this module does not remove the pushed image from the repository. Consider
   setting `force_delete = True` on the `aws_ecr_repository` resource if you
@@ -88,7 +103,8 @@ No outputs.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.40.0 |
+| <a name="provider_aws.main"></a> [aws.main](#provider\_aws.main) | >= 5.40.0 |
+| <a name="provider_aws.virginia"></a> [aws.virginia](#provider\_aws.virginia) | >= 5.40.0 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Requirements
