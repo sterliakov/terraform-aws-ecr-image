@@ -29,6 +29,14 @@ but the implementation was significantly rewritten.
 Push a dummy Alpine image to a newly created ECR repository:
 
 ```terraform
+provider "aws" {
+  region = "us-east-2"
+}
+provider "aws" {
+  region = "us-east-1"
+  alias = "aws.virginia"
+}
+
 resource "aws_ecr_repository" "example" {
   name = "example"
 }
@@ -36,6 +44,10 @@ resource "aws_ecr_repository" "example" {
 module "ecr_repo_image" {
   source  = "sterliakov/ecr-image/aws"
   version = "0.1.0"
+  providers = {
+    aws.main = aws
+    aws.virginia = aws.virginia
+  }
 
   push_ecr_is_public = false
   push_repo_fqdn     = replace(aws_ecr_repository.example.repository_url, "//.*$/", "") # remove everything after first slash
@@ -52,6 +64,9 @@ module "ecr_repo_image" {
   want to remove the repository with terraform later.
 * This module needs `curl` and `jq` on `PATH`. If `jq` are missing, it will fetch
   and install `jq 1.7.1` locally for the appropriate architecture.
+* This module needs two provider aliases: `aws.main` and `aws.virginia`. They
+  may refer to the same provider. `aws.virginia` must be in `us-east-1` region.
+  `aws.main` should be the provider for region where your repository is located.
 
 ## EXAMPLES
 
@@ -88,7 +103,8 @@ No outputs.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.40.0 |
+| <a name="provider_aws.main"></a> [aws.main](#provider\_aws.main) | >= 5.40.0 |
+| <a name="provider_aws.virginia"></a> [aws.virginia](#provider\_aws.virginia) | >= 5.40.0 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Requirements

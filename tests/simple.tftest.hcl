@@ -13,6 +13,11 @@ run "setup" {
 }
 
 run "execute" {
+  providers = {
+    aws.main = aws
+    aws.virginia = aws
+  }
+
   variables {
     push_repo_fqdn     = replace(run.setup.repo_url, "//.*$/", "") # remove everything after first slash
     push_repo_name     = run.setup.repo_name
