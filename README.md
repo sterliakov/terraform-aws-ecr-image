@@ -74,6 +74,9 @@ module "ecr_repo_image" {
 
 <!-- BEGIN_TF_DOCS -->
 
+
+
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
