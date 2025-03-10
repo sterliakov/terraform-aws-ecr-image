@@ -58,15 +58,15 @@ module "ecr_repo_image" {
 
 ## NOTES
 
+* This module needs two provider aliases: `aws.main` and `aws.virginia`. They
+  may refer to the same provider. `aws.virginia` must be in `us-east-1` region.
+  `aws.main` should be the provider for region where your repository is located.
 * This module only works under Linux.
 * Destroying this module does not remove the pushed image from the repository. Consider
   setting `force_delete = True` on the `aws_ecr_repository` resource if you
   want to remove the repository with terraform later.
 * This module needs `curl` and `jq` on `PATH`. If `jq` are missing, it will fetch
   and install `jq 1.7.1` locally for the appropriate architecture.
-* This module needs two provider aliases: `aws.main` and `aws.virginia`. They
-  may refer to the same provider. `aws.virginia` must be in `us-east-1` region.
-  `aws.main` should be the provider for region where your repository is located.
 
 ## EXAMPLES
 
