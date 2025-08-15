@@ -14,14 +14,14 @@ run "setup" {
 
 run "execute" {
   providers = {
-    aws.main = aws
+    aws.main     = aws
     aws.virginia = aws
   }
 
   variables {
-    push_repo_fqdn     = replace(run.setup.repo_url, "//.*$/", "") # remove everything after first slash
-    push_repo_name     = run.setup.repo_name
-    push_image_tag     = var.tag
+    push_repo_fqdn = replace(run.setup.repo_url, "//.*$/", "") # remove everything after first slash
+    push_repo_name = run.setup.repo_name
+    push_image_tag = var.tag
   }
 }
 
@@ -30,22 +30,22 @@ run "verify" {
     source = "./tests/check"
   }
   variables {
-    repo_name     = run.setup.repo_name
+    repo_name = run.setup.repo_name
     image_tag = var.tag
   }
 }
 
 run "execute_again" {
   providers = {
-    aws.main = aws
+    aws.main     = aws
     aws.virginia = aws
   }
 
   # Ensure no drift
   variables {
-    push_repo_fqdn     = replace(run.setup.repo_url, "//.*$/", "") # remove everything after first slash
-    push_repo_name     = run.setup.repo_name
-    push_image_tag     = var.tag
+    push_repo_fqdn = replace(run.setup.repo_url, "//.*$/", "") # remove everything after first slash
+    push_repo_name = run.setup.repo_name
+    push_image_tag = var.tag
   }
 }
 
@@ -54,12 +54,12 @@ run "verify_again" {
     source = "./tests/check"
   }
   variables {
-    repo_name     = run.setup.repo_name
+    repo_name = run.setup.repo_name
     image_tag = var.tag
   }
 
   assert {
-    condition = data.aws_ecr_image.service_image.image_pushed_at == run.verify.pushed_at
+    condition     = data.aws_ecr_image.service_image.image_pushed_at == run.verify.pushed_at
     error_message = "Image was replaced unexpectedly."
   }
 }
