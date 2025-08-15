@@ -1,58 +1,78 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-merge-conflict
-    -   id: check-executables-have-shebangs
-    -   id: check-shebang-scripts-are-executable
-    -   id: check-symlinks
-    -   id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: mixed-line-ending
         args: [--fix=lf]
-    -   id: check-yaml
-    -   id: check-json
-    -   id: pretty-format-json
+      - id: check-yaml
+      - id: check-json
+      - id: pretty-format-json
         args: [--autofix, --no-ensure-ascii]
 
--   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
     rev: v2.15.0
     hooks:
-    -   id: pretty-format-yaml
-        args: [--autofix, --indent, '4']
+      - id: pretty-format-yaml
+        args: [--autofix, --indent, '2', --offset, '2']
 
--   repo: https://github.com/shellcheck-py/shellcheck-py
+  - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
     hooks:
-    -   id: shellcheck
+      - id: shellcheck
         args: [-x, -P, SCRIPTDIR, -S, style]
 
--   repo: https://github.com/antonbabenko/pre-commit-terraform
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.100.0
     hooks:
-    -   id: terraform_fmt
-    -   id: terraform_tflint
-    -   id: terraform_docs
+      - id: terraform_fmt
+      - id: terraform_tflint
+      - id: terraform_docs
         args:
-        -   --hook-config=--config-file=.terraform-docs.yml
+          - --hook-config=--config-file=.terraform-docs.yml
 
--   repo: https://github.com/bridgecrewio/checkov.git
+  - repo: https://github.com/bridgecrewio/checkov.git
     rev: 3.2.461
     hooks:
-    -   id: checkov
+      - id: checkov
         args:
-        -   --download-external-modules
-        -   'true'
-        -   --compact
-        -   --skip-check
+          - --download-external-modules
+          - 'true'
+          - --compact
+          - --skip-check
           # Terraform module sources do not use a git url with a commit hash revision
-        -   CKV_TF_1
-        -   --skip-path
-        -   examples/
-        -   --skip-path
-        -   tests/
+          - CKV_TF_1
+          - --skip-path
+          - examples/
+          - --skip-path
+          - tests/
 
--   repo: https://github.com/codespell-project/codespell
+  - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
-    -   id: codespell
+      - id: codespell
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.33.2
+    hooks:
+      - id: check-github-workflows
+      - id: check-jsonschema
+        args: [--check-metaschema]
+        files: ^renovate.json$
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
+        additional_dependencies:
+          - github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.10.0
+
+  - repo: https://github.com/woodruffw/zizmor-pre-commit
+    rev: v1.12.0
+    hooks:
+      - id: zizmor
