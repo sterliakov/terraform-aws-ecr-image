@@ -16,7 +16,7 @@ repos:
         args: [--autofix, --no-ensure-ascii]
 
 -   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.14.0
+    rev: v2.15.0
     hooks:
     -   id: pretty-format-yaml
         args: [--autofix, --indent, '4']
@@ -28,7 +28,7 @@ repos:
         args: [-x, -P, SCRIPTDIR, -S, style]
 
 -   repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.97.4
+    rev: v1.100.0
     hooks:
     -   id: terraform_fmt
     -   id: terraform_tflint
@@ -37,7 +37,7 @@ repos:
         -   --hook-config=--config-file=.terraform-docs.yml
 
 -   repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.382
+    rev: 3.2.461
     hooks:
     -   id: checkov
         args:
