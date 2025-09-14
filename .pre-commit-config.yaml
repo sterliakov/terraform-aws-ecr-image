@@ -37,7 +37,7 @@ repos:
           - --hook-config=--config-file=.terraform-docs.yml
 
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.467
+    rev: 3.2.471
     hooks:
       - id: checkov
         args:
@@ -73,6 +73,6 @@ repos:
           - github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.10.0
 
   - repo: https://github.com/woodruffw/zizmor-pre-commit
-    rev: v1.12.1
+    rev: v1.13.0
     hooks:
       - id: zizmor
