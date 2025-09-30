@@ -28,7 +28,7 @@ repos:
         args: [-x, -P, SCRIPTDIR, -S, style]
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.100.1
+    rev: v1.101.0
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
@@ -37,7 +37,7 @@ repos:
           - --hook-config=--config-file=.terraform-docs.yml
 
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.472
+    rev: 3.2.473
     hooks:
       - id: checkov
         args:
