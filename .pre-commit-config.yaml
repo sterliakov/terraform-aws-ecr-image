@@ -37,7 +37,7 @@ repos:
           - --hook-config=--config-file=.terraform-docs.yml
 
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.474
+    rev: 3.2.476
     hooks:
       - id: checkov
         args:
