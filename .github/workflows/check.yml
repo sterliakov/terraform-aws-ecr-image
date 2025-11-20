@@ -18,7 +18,7 @@ jobs:
     name: Pre-commit hooks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -59,7 +59,7 @@ jobs:
       matrix:
         terraform_version: [1.7.0, latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: hashicorp/setup-terraform@v3
