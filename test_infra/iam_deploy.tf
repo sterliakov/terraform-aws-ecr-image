@@ -1,6 +1,6 @@
 module "github_actions_test_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-github-oidc-role"
-  version = "6.2.3"
+  version = "6.3.0"
 
   name     = "ecr-test-role"
   subjects = ["${local.repo}:*"]
