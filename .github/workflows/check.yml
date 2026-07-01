@@ -18,14 +18,14 @@ jobs:
     name: Pre-commit hooks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - uses: terraform-linters/setup-tflint@v6
         name: Setup TFLint
         with:
@@ -59,13 +59,13 @@ jobs:
       matrix:
         terraform_version: [1.7.0, latest]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ matrix.terraform_version }}
-      - uses: aws-actions/configure-aws-credentials@v5
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ env.TEST_ROLE }}
           aws-region: us-east-1
